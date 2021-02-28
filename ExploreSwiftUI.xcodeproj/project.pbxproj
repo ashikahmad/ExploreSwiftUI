@@ -7,12 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B6ACC1E25EB7D9A000A99CB /* ExperimentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */; };
+		3B6ACC2325EB7F68000A99CB /* PrayerTimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC2225EB7F68000A99CB /* PrayerTimesView.swift */; };
+		3B6ACC2825EB8000000A99CB /* FinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC2725EB8000000A99CB /* FinderView.swift */; };
+		3B6ACC2D25EB80CA000A99CB /* WeeklyWeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC2C25EB80CA000A99CB /* WeeklyWeatherView.swift */; };
+		3B6ACC3225EBCF8D000A99CB /* SwiftUI+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC3125EBCF8D000A99CB /* SwiftUI+Extra.swift */; };
+		3B6F11AC25E91D16000B9EFA /* BedTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6F11AB25E91D16000B9EFA /* BedTimeView.swift */; };
+		3B745A7A25B4776700A43100 /* DayWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B745A7925B4776700A43100 /* DayWeatherCell.swift */; };
+		3B745A8225B4787700A43100 /* WaqtRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B745A8125B4787700A43100 /* WaqtRow.swift */; };
+		3B745A8725B47A1300A43100 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B745A8625B47A1300A43100 /* Folder.swift */; };
+		3B745A8C25B4A86E00A43100 /* SingleAxisGeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B745A8B25B4A86E00A43100 /* SingleAxisGeometryReader.swift */; };
+		3BB6B70325BF2A9F00FE9AFC /* PrayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB6B70225BF2A9F00FE9AFC /* PrayerService.swift */; };
+		3BB6B70C25BF2ADA00FE9AFC /* PrayerTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB6B70B25BF2ADA00FE9AFC /* PrayerTime.swift */; };
 		3BF7110225AF2AA100131030 /* ExploreSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7110125AF2AA100131030 /* ExploreSwiftUIApp.swift */; };
 		3BF7110425AF2AA100131030 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7110325AF2AA100131030 /* ContentView.swift */; };
 		3BF7110625AF2AA700131030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BF7110525AF2AA700131030 /* Assets.xcassets */; };
 		3BF7110925AF2AA700131030 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BF7110825AF2AA700131030 /* Preview Assets.xcassets */; };
 		3BF7111425AF2AA700131030 /* ExploreSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7111325AF2AA700131030 /* ExploreSwiftUITests.swift */; };
 		3BF7111F25AF2AA700131030 /* ExploreSwiftUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7111E25AF2AA700131030 /* ExploreSwiftUIUITests.swift */; };
+		3BF7113025AF54D200131030 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF7112F25AF54D200131030 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +46,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentListView.swift; sourceTree = "<group>"; };
+		3B6ACC2225EB7F68000A99CB /* PrayerTimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesView.swift; sourceTree = "<group>"; };
+		3B6ACC2725EB8000000A99CB /* FinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderView.swift; sourceTree = "<group>"; };
+		3B6ACC2C25EB80CA000A99CB /* WeeklyWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyWeatherView.swift; sourceTree = "<group>"; };
+		3B6ACC3125EBCF8D000A99CB /* SwiftUI+Extra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+Extra.swift"; sourceTree = "<group>"; };
+		3B6F11AB25E91D16000B9EFA /* BedTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedTimeView.swift; sourceTree = "<group>"; };
+		3B745A7925B4776700A43100 /* DayWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayWeatherCell.swift; sourceTree = "<group>"; };
+		3B745A8125B4787700A43100 /* WaqtRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaqtRow.swift; sourceTree = "<group>"; };
+		3B745A8625B47A1300A43100 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
+		3B745A8B25B4A86E00A43100 /* SingleAxisGeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAxisGeometryReader.swift; sourceTree = "<group>"; };
+		3BB6B70225BF2A9F00FE9AFC /* PrayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerService.swift; sourceTree = "<group>"; };
+		3BB6B70B25BF2ADA00FE9AFC /* PrayerTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTime.swift; sourceTree = "<group>"; };
 		3BF710FE25AF2AA100131030 /* ExploreSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExploreSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BF7110125AF2AA100131030 /* ExploreSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSwiftUIApp.swift; sourceTree = "<group>"; };
 		3BF7110325AF2AA100131030 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +70,7 @@
 		3BF7111A25AF2AA700131030 /* ExploreSwiftUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExploreSwiftUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BF7111E25AF2AA700131030 /* ExploreSwiftUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSwiftUIUITests.swift; sourceTree = "<group>"; };
 		3BF7112025AF2AA700131030 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3BF7112F25AF54D200131030 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +98,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B745A7625B4770700A43100 /* WeatherUI */ = {
+			isa = PBXGroup;
+			children = (
+				3B745A7925B4776700A43100 /* DayWeatherCell.swift */,
+				3B6ACC2C25EB80CA000A99CB /* WeeklyWeatherView.swift */,
+			);
+			path = WeatherUI;
+			sourceTree = "<group>";
+		};
+		3B745A7725B4771000A43100 /* FinderUI */ = {
+			isa = PBXGroup;
+			children = (
+				3B745A8625B47A1300A43100 /* Folder.swift */,
+				3B6ACC2725EB8000000A99CB /* FinderView.swift */,
+			);
+			path = FinderUI;
+			sourceTree = "<group>";
+		};
+		3B745A7825B4771B00A43100 /* PrayerUI */ = {
+			isa = PBXGroup;
+			children = (
+				3B745A8125B4787700A43100 /* WaqtRow.swift */,
+				3B6ACC2225EB7F68000A99CB /* PrayerTimesView.swift */,
+			);
+			path = PrayerUI;
+			sourceTree = "<group>";
+		};
+		3B745A9025B5565700A43100 /* Toolbox */ = {
+			isa = PBXGroup;
+			children = (
+				3BF7112F25AF54D200131030 /* Color.swift */,
+				3B745A8B25B4A86E00A43100 /* SingleAxisGeometryReader.swift */,
+				3B6ACC3125EBCF8D000A99CB /* SwiftUI+Extra.swift */,
+			);
+			path = Toolbox;
+			sourceTree = "<group>";
+		};
+		3BB6B70125BF2A8E00FE9AFC /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3BB6B70225BF2A9F00FE9AFC /* PrayerService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3BB6B70A25BF2AC600FE9AFC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3BB6B70B25BF2ADA00FE9AFC /* PrayerTime.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		3BF710F525AF2AA100131030 = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +174,16 @@
 		3BF7110025AF2AA100131030 /* ExploreSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				3BB6B70A25BF2AC600FE9AFC /* Models */,
+				3BB6B70125BF2A8E00FE9AFC /* Services */,
+				3B745A9025B5565700A43100 /* Toolbox */,
+				3B745A7825B4771B00A43100 /* PrayerUI */,
+				3B745A7725B4771000A43100 /* FinderUI */,
+				3B745A7625B4770700A43100 /* WeatherUI */,
 				3BF7110125AF2AA100131030 /* ExploreSwiftUIApp.swift */,
 				3BF7110325AF2AA100131030 /* ContentView.swift */,
+				3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */,
+				3B6F11AB25E91D16000B9EFA /* BedTimeView.swift */,
 				3BF7110525AF2AA700131030 /* Assets.xcassets */,
 				3BF7110A25AF2AA700131030 /* Info.plist */,
 				3BF7110725AF2AA700131030 /* Preview Content */,
@@ -259,8 +346,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B6ACC2325EB7F68000A99CB /* PrayerTimesView.swift in Sources */,
+				3B745A8225B4787700A43100 /* WaqtRow.swift in Sources */,
+				3B6F11AC25E91D16000B9EFA /* BedTimeView.swift in Sources */,
+				3BB6B70C25BF2ADA00FE9AFC /* PrayerTime.swift in Sources */,
 				3BF7110425AF2AA100131030 /* ContentView.swift in Sources */,
+				3B6ACC2825EB8000000A99CB /* FinderView.swift in Sources */,
+				3B6ACC2D25EB80CA000A99CB /* WeeklyWeatherView.swift in Sources */,
+				3BB6B70325BF2A9F00FE9AFC /* PrayerService.swift in Sources */,
+				3B745A8C25B4A86E00A43100 /* SingleAxisGeometryReader.swift in Sources */,
+				3B6ACC3225EBCF8D000A99CB /* SwiftUI+Extra.swift in Sources */,
+				3B745A7A25B4776700A43100 /* DayWeatherCell.swift in Sources */,
 				3BF7110225AF2AA100131030 /* ExploreSwiftUIApp.swift in Sources */,
+				3B6ACC1E25EB7D9A000A99CB /* ExperimentListView.swift in Sources */,
+				3BF7113025AF54D200131030 /* Color.swift in Sources */,
+				3B745A8725B47A1300A43100 /* Folder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
