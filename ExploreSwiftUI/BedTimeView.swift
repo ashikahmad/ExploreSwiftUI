@@ -8,115 +8,18 @@
 import SwiftUI
 import Combine
 
+// ---------------------------------------------------
+// MARK: - Constants
+// ---------------------------------------------------
+
 struct BedTimeColorPalette {
     static let bgColor2: Color = Color(#colorLiteral(red: 0.1088567451, green: 0.1088567451, blue: 0.1088567451, alpha: 1))
     static let bgColor : Color = Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
     static let fgColor : Color = Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
-    static let accent  : Color = Color(#colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1))
-}
-
-struct BedTimeView: View {
-    
-    @ObservedObject var data: BedTimeData
-    
-    // -----------------------------
-    // MARK: - Make Input
-    // -----------------------------
-    
-    fileprivate func makeInputSection() -> some View {
-        VStack(spacing: 4) {
-            HStack(spacing: 2) {
-                Image(systemName: "bed.double.fill")
-                Text("BEDTIME")
-                
-                Spacer()
-                
-                Image(systemName: "bell.fill")
-                Text("WAKE UP")
-            }
-            .padding(.horizontal, 8)
-            
-            HStack {
-                DatePicker("Bed time", selection: $data.startTime, displayedComponents: [.hourAndMinute])
-                    .labelsHidden()
-                    .background(BedTimeColorPalette.bgColor2)
-                    .mask(Capsule())
-                
-                Line()
-                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                    .foregroundColor(BedTimeColorPalette.bgColor2)
-                    .frame(height: 2)
-                
-                makeDurationText()
-                
-                Line()
-                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                    .foregroundColor(BedTimeColorPalette.bgColor2)
-                    .frame(height: 2)
-                
-                DatePicker("Wake up time", selection: $data.endTime, displayedComponents: [.hourAndMinute])
-                    .labelsHidden()
-                    .background(BedTimeColorPalette.bgColor2)
-                    .mask(Capsule())
-            }
-        }
-        .font(.system(size: 12, weight: .bold, design: .rounded))
-        .foregroundColor(BedTimeColorPalette.fgColor)
-        .padding(.horizontal)
-    }
-    
-    fileprivate func makeDurationText() -> some View {
-        let hr = Int(data.duration)
-        let min = Int((data.duration - floor(data.duration))*60)
-        
-        let hrStr = hr > 0 ? "\(hr) hr" : ""
-        let minStr = min > 0 ? "\(min) min" : ""
-        
-        return Text([hrStr, minStr].joined(separator: " "))
-            .font(.system(size: 15, weight: .bold, design: .rounded))
-            .layoutPriority(1)
-    }
-    
-    // -----------------------------
-    // MARK: - Body
-    // -----------------------------
-    
-    init() {
-        let startDate: Date = Date(
-            timeInterval: 0 * 3600,
-            since: Date.today)
-        
-        let endDate: Date = Date(
-            timeInterval: 6.4 * 3600,
-            since: Date.today)
-        
-        data = BedTimeData(
-            startTime: startDate,
-            endTime: endDate)
-    }
-    
-    var body: some View {
-        
-        VStack {
-            Spacer()
-            
-            makeInputSection()
-            BedTimeDial(data: data)
-            
-            Spacer()
-        }
-        .background(BedTimeColorPalette.bgColor.ignoresSafeArea())
-    }
-}
-
-struct BedTimeView_Previews: PreviewProvider {
-    static var previews: some View {
-        BedTimeView()
-    }
 }
 
 // ---------------------------------------------------
-// MARK: - BedTime Dial
+// MARK: - Data
 // ---------------------------------------------------
 
 class BedTimeData: ObservableObject {
@@ -142,8 +45,19 @@ class BedTimeData: ObservableObject {
     }
 }
 
+// ---------------------------------------------------
+// MARK: - Dial
+// ---------------------------------------------------
+
 struct BedTimeDial: View {
+    private enum DragType {
+        case none, start, end
+    }
+    
     @ObservedObject var data: BedTimeData
+    
+    @State private var totalWidth: CGFloat = 0
+    @State private var currentDrag: DragType = .none
     
     let sliderRingWidth: CGFloat = 40
     let sliderPadding: CGFloat = 5
@@ -166,8 +80,6 @@ struct BedTimeDial: View {
             + majorTickerWidth
     }
     
-    @State private var totalWidth: CGFloat = 0
-    
     var sliderRadius: CGFloat {
         return totalWidth/2
             - sliderPadding
@@ -179,8 +91,8 @@ struct BedTimeDial: View {
         let x = location.x - knobW
         let y = location.y - sliderRadius - knobW
         
-        let a = angle(for: CGSize(width: x, height: y))
-        let hr = angleToHours(a)
+        let angle = translationToAngle(CGSize(width: x, height: y))
+        let hr = angleToHours(angle)
         
         if currentDrag == .start {
             data.startTime = Date(hours: hr)
@@ -189,15 +101,19 @@ struct BedTimeDial: View {
         }
     }
     
-    func hoursToAngle(_ hours: Double) -> Angle {
+    // -----------------------------
+    // MARK: Conversions
+    // -----------------------------
+    
+    private func hoursToAngle(_ hours: Double) -> Angle {
         return .degrees(hours*360/24)
     }
     
-    func angleToHours(_ angle: Angle) -> Double {
+    private func angleToHours(_ angle: Angle) -> Double {
         return angle.degrees*24/360
     }
     
-    func translation(for angle: Angle) -> CGSize {
+    private func angleToTranslation(_ angle: Angle) -> CGSize {
         let r = Double(sliderRadius)
         let A = angle.radians - .pi/2
         let h = r * sin(A)
@@ -205,11 +121,15 @@ struct BedTimeDial: View {
         return CGSize(width: w, height: h)
     }
     
-    func angle(for translation: CGSize) -> Angle {
+    private func translationToAngle(_ translation: CGSize) -> Angle {
         var a = atan2(translation.height,  translation.width) + .pi/2
         if a < 0 { a += .pi*2 }
         return .radians(Double(a))
     }
+    
+    // -----------------------------
+    // MARK: Dial Body
+    // -----------------------------
     
     var body: some View {
         ZStack {
@@ -233,13 +153,8 @@ struct BedTimeDial: View {
     }
     
     // -----------------------------
-    // MARK: - Make Slider
+    // MARK: Make Slider
     // -----------------------------
-    
-    private enum DragType {
-        case none, start, end
-    }
-    @State private var currentDrag: DragType = .none
     
     fileprivate func makeKnobs() -> some View {
         // Knobs
@@ -309,7 +224,7 @@ struct BedTimeDial: View {
     }
     
     // -----------------------------
-    // MARK: - Make Dial
+    // MARK: Make Dial
     // -----------------------------
     
     fileprivate func makeTickers() -> some View {
@@ -364,7 +279,7 @@ struct BedTimeDial: View {
         .aspectRatio(1, contentMode: .fit)
     }
     
-    func makeSecondaryLabels() -> some View {
+    fileprivate func makeSecondaryLabels() -> some View {
         ZStack {
             ForEach(0..<12) { index in
                 let angle = Double(index * 30)
@@ -374,10 +289,9 @@ struct BedTimeDial: View {
                 if index % 3 == 0 {
                     EmptyView()
                 } else {
-                    Text(label)
-                        .rotating(
-                            angle: angle - 90,
-                            padding: labelsPadding)
+                    Text(label).rotating(
+                        angle: angle - 90,
+                        padding: labelsPadding)
                 }
             }
             .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -385,6 +299,105 @@ struct BedTimeDial: View {
         }
     }
     
+}
+
+// ---------------------------------------------------
+// MARK: - View
+// ---------------------------------------------------
+
+struct BedTimeView: View {
+    
+    @ObservedObject var data: BedTimeData
+    
+    // -----------------------------
+    // MARK: Make Input
+    // -----------------------------
+    
+    fileprivate func makeInputSection() -> some View {
+        VStack(spacing: 4) {
+            HStack(spacing: 2) {
+                Image(systemName: "bed.double.fill")
+                Text("BEDTIME")
+                
+                Spacer()
+                
+                Image(systemName: "bell.fill")
+                Text("WAKE UP")
+            }
+            .padding(.horizontal, 8)
+            
+            HStack {
+                DatePicker("Bed time", selection: $data.startTime, displayedComponents: [.hourAndMinute])
+                    .labelsHidden()
+                    .background(BedTimeColorPalette.bgColor2)
+                    .mask(Capsule())
+                
+                Line()
+                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                    .foregroundColor(BedTimeColorPalette.bgColor2)
+                    .frame(height: 2)
+                
+                makeDurationText()
+                
+                Line()
+                    .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                    .foregroundColor(BedTimeColorPalette.bgColor2)
+                    .frame(height: 2)
+                
+                DatePicker("Wake up time", selection: $data.endTime, displayedComponents: [.hourAndMinute])
+                    .labelsHidden()
+                    .background(BedTimeColorPalette.bgColor2)
+                    .mask(Capsule())
+            }
+        }
+        .font(.system(size: 12, weight: .bold, design: .rounded))
+        .foregroundColor(BedTimeColorPalette.fgColor)
+        .padding(.horizontal)
+    }
+    
+    fileprivate func makeDurationText() -> some View {
+        let hr = Int(data.duration)
+        let min = Int((data.duration - floor(data.duration))*60)
+        
+        let hrStr = hr > 0 ? "\(hr) hr" : ""
+        let minStr = min > 0 ? "\(min) min" : ""
+        
+        return Text([hrStr, minStr].joined(separator: " "))
+            .font(.system(size: 15, weight: .bold, design: .rounded))
+            .layoutPriority(1)
+    }
+    
+    // -----------------------------
+    // MARK: Body
+    // -----------------------------
+    
+    init() {
+        let startDate: Date = Date(hours: 0)
+        let endDate: Date = Date(hours: 6.4)
+        
+        data = BedTimeData(
+            startTime: startDate,
+            endTime: endDate)
+    }
+    
+    var body: some View {
+        
+        VStack {
+            Spacer()
+            
+            makeInputSection()
+            BedTimeDial(data: data)
+            
+            Spacer()
+        }
+        .background(BedTimeColorPalette.bgColor.ignoresSafeArea())
+    }
+}
+
+struct BedTimeView_Previews: PreviewProvider {
+    static var previews: some View {
+        BedTimeView()
+    }
 }
 
 // ---------------------------------------------------
@@ -424,15 +437,5 @@ struct Line: Shape {
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: rect.width, y: 0))
         return path
-    }
-}
-
-extension CGPoint {
-    func asSize() -> CGSize {
-        return CGSize(width: x, height: y)
-    }
-    
-    func adding(_ other: CGPoint) -> CGPoint {
-        return CGPoint(x: x + other.x, y: y + other.y)
     }
 }
