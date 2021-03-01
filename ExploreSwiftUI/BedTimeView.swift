@@ -50,8 +50,22 @@ class BedTimeData: ObservableObject {
 // ---------------------------------------------------
 
 struct BedTimeDial: View {
-    private enum DragType {
-        case none, start, end
+    private enum DragType: Equatable {
+        case none, start, end, slider(Double, Double)
+        
+        static func == (lhs: DragType, rhs: DragType) -> Bool {
+            switch (lhs, rhs) {
+            case (.none, .none),
+                 (.start, .start),
+                 (.end, .end): return true
+                
+            case let (.slider(lStart, lEnd), .slider(rStart, rEnd)):
+                return (lStart, lEnd) == (rStart, rEnd)
+                
+            default:
+                return false
+            }
+        }
     }
     
     @ObservedObject var data: BedTimeData
@@ -101,6 +115,38 @@ struct BedTimeDial: View {
         }
     }
     
+    private func moveSlider(location: CGPoint, startLocation: CGPoint) {
+        let knobW = sliderRingWidth - sliderInnerPadding*2
+        
+        if currentDrag == .none {
+            let sx = startLocation.x - sliderRadius - knobW
+            let sy = startLocation.y - sliderRadius - knobW
+            
+            let sAngle = translationToAngle(CGSize(width: sx, height: sy))
+            let sHr = angleToHours(sAngle)
+            
+            var startDiff = (sHr - data.startHour)
+            if startDiff > 0 { startDiff -= 24 }
+            
+            var endDiff = (data.endHour - sHr)
+            if endDiff < 0 { endDiff += 24 }
+            
+            currentDrag = .slider(startDiff, endDiff)
+        }
+        
+        guard case let .slider(startDiff, endDiff) = currentDrag
+        else { return }
+        
+        let x = location.x - sliderRadius - knobW
+        let y = location.y - sliderRadius - knobW
+        
+        let angle = translationToAngle(CGSize(width: x, height: y))
+        let hr = angleToHours(angle)
+        
+        data.startTime = Date(hours: (hr - startDiff).fixHour())
+        data.endTime = Date(hours: (hr + endDiff).fixHour())
+    }
+    
     // -----------------------------
     // MARK: Conversions
     // -----------------------------
@@ -136,13 +182,18 @@ struct BedTimeDial: View {
             Color.clear.frame(height: 1).readSize {
                 totalWidth = $0.width
             }
-            makeSlider()
+            
+            // Slider Ring
+            Circle()
+                .foregroundColor(BedTimeColorPalette.bgColor2)
             
             // Dial BG
             Circle()
                 .inset(by: sliderRingWidth
                         + sliderPadding * 2)
                 .foregroundColor(BedTimeColorPalette.bgColor)
+            
+            makeSlider()
             
             makeTickers()
             makeSecondaryLabels()
@@ -188,10 +239,6 @@ struct BedTimeDial: View {
     
     fileprivate func makeSlider() -> some View {
         ZStack {
-            // Slider Ring
-            Circle()
-                .foregroundColor(BedTimeColorPalette.bgColor2)
-            
             // Slider Fill
             Circle()
                 .inset(by: sliderPadding + sliderRingWidth/2)
@@ -218,6 +265,13 @@ struct BedTimeDial: View {
                 ))
                 .foregroundColor(BedTimeColorPalette.bgColor2)
                 .rotationEffect(.degrees(startDegree-90))
+                .gesture(DragGesture(minimumDistance: 0).onChanged { value in
+                    moveSlider(
+                        location: value.location,
+                        startLocation: value.startLocation)
+                }.onEnded { _ in
+                    currentDrag = .none
+                })
             
             makeKnobs()
         }
@@ -437,5 +491,29 @@ struct Line: Shape {
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: rect.width, y: 0))
         return path
+    }
+}
+
+extension CGPoint {
+    func asSize() -> CGSize {
+        return CGSize(width: x, height: y)
+    }
+}
+
+extension Double {
+    func fold(into range: Range<Double>) -> Double {
+        if range.contains(self) { return self }
+        
+        let len = range.upperBound - range.lowerBound
+        var val = self - range.lowerBound
+        val.formTruncatingRemainder(dividingBy: len)
+        val += range.lowerBound
+        if val < range.lowerBound { val += len }
+        
+        return val
+    }
+    
+    func fixHour() -> Double {
+        return fold(into: 0..<24)
     }
 }
