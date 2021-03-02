@@ -12,10 +12,58 @@ import Combine
 // MARK: - Constants
 // ---------------------------------------------------
 
-struct BedTimeColorPalette {
-    static let bgColor2: Color = Color(#colorLiteral(red: 0.1088567451, green: 0.1088567451, blue: 0.1088567451, alpha: 1))
-    static let bgColor : Color = Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
-    static let fgColor : Color = Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
+fileprivate struct ColorPalette {
+    // background
+    //  - card
+    // secondary background color
+    //  - Slider ring background color
+    //  - Input time picker background color
+    //  - Knob background color when dragging
+    // tertiary background color
+    //  - Slider handle color
+    //  - Dial background color
+    // foreground color
+    //  - Input Labels
+    //  - Primary Labels
+    //  - Knob Icons
+    // secondary foreground color
+    //  - Secondary Labels
+    // tertiary foreground color
+    //  - ticker color
+    //  - slider dash color
+    
+    let background : Color
+    let background2: Color
+    let background3: Color
+    let foreground : Color
+    let foreground2: Color
+    let foreground3: Color
+    
+    static let dark = ColorPalette(
+        background : Color(.systemGray5),
+        background2: Color(.systemGray6),
+        background3: Color(.systemGray5),
+        foreground : Color(.label),
+        foreground2: Color(.secondaryLabel),
+        foreground3: Color(.tertiaryLabel)
+    )
+    
+    static let light = ColorPalette(
+        background : Color(.systemGray5),
+        background2: Color(.systemGray4),
+        background3: Color(.systemGray6),
+        foreground : Color(.label),
+        foreground2: Color(.secondaryLabel),
+        foreground3: Color(.tertiaryLabel)
+    )
+    
+    static subscript (_ scheme: ColorScheme) -> Self {
+        switch scheme {
+        case .light: return light
+        case .dark: return dark
+        @unknown default: return light
+        }
+    }
 }
 
 // ---------------------------------------------------
@@ -74,6 +122,8 @@ class BedTimeData: ObservableObject {
 // ---------------------------------------------------
 
 struct BedTimeDial: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     private enum DragType: Equatable {
         case none, start, end, slider(Double, Double)
         
@@ -209,13 +259,13 @@ struct BedTimeDial: View {
             
             // Slider Ring
             Circle()
-                .foregroundColor(BedTimeColorPalette.bgColor2)
+                .foregroundColor(ColorPalette[colorScheme].background2)
             
             // Dial BG
             Circle()
                 .inset(by: sliderRingWidth
                         + sliderPadding * 2)
-                .foregroundColor(BedTimeColorPalette.bgColor)
+                .foregroundColor(ColorPalette[colorScheme].background3)
             
             makeSlider()
             
@@ -246,9 +296,12 @@ struct BedTimeDial: View {
                 .padding(sliderInnerPadding - 2)
                 .background(
                     Circle()
-                        .foregroundColor(currentDrag == .none ? .clear : BedTimeColorPalette.bgColor2))
+                        .foregroundColor(
+                            currentDrag == .none
+                                ? .clear
+                                : ColorPalette[colorScheme].background2))
                 .aspectRatio(1, contentMode: .fit)
-                .foregroundColor(BedTimeColorPalette.fgColor)
+                .foregroundColor(ColorPalette[colorScheme].foreground2)
                 .rotationEffect(.degrees(-angle - startDegree + 90))
                 .offset(x: sliderRadius)
                 .rotationEffect(.degrees(angle + startDegree - 90))
@@ -274,7 +327,7 @@ struct BedTimeDial: View {
                 ))
                 .foregroundColor(
                     currentDrag == .none
-                        ? BedTimeColorPalette.bgColor
+                        ? ColorPalette[colorScheme].background3
                         : .accentColor)
                 .rotationEffect(.degrees(startDegree-90))
             
@@ -287,7 +340,7 @@ struct BedTimeDial: View {
                     lineWidth: sliderRingWidth - sliderInnerPadding*2,
                     dash: [2, 4]
                 ))
-                .foregroundColor(BedTimeColorPalette.bgColor2)
+                .foregroundColor(ColorPalette[colorScheme].background2)
                 .rotationEffect(.degrees(startDegree-90))
                 .gesture(DragGesture(minimumDistance: 0).onChanged { value in
                     moveSlider(
@@ -324,7 +377,7 @@ struct BedTimeDial: View {
                 RoundedRectangle(cornerRadius: 2)
                     .frame(width: width,
                            height: 2)
-                    .foregroundColor(BedTimeColorPalette.bgColor2)
+                    .foregroundColor(ColorPalette[colorScheme].foreground3)
             }
             .padding(
                 sliderRingWidth
@@ -340,6 +393,7 @@ struct BedTimeDial: View {
             Text("12 AM")
             Image(systemName: "moon.circle.fill")
                 .renderingMode(.original)
+                .font(.subheadline)
             Spacer()
             HStack {
                 Text("6 PM")
@@ -348,11 +402,12 @@ struct BedTimeDial: View {
             }
             Spacer()
             Image(systemName: "sun.max.fill")
-                .renderingMode(.original)
+                .foregroundColor(.yellow)
+                .font(.subheadline)
             Text("12 PM")
         }
         .font(.system(size: 12, weight: .bold, design: .rounded))
-        .foregroundColor(BedTimeColorPalette.fgColor)
+        .foregroundColor(ColorPalette[colorScheme].foreground)
         .padding(labelsPadding)
         .aspectRatio(1, contentMode: .fit)
     }
@@ -373,7 +428,7 @@ struct BedTimeDial: View {
                 }
             }
             .font(.system(size: 12, weight: .bold, design: .rounded))
-            .foregroundColor(BedTimeColorPalette.bgColor2)
+            .foregroundColor(ColorPalette[colorScheme].foreground2)
         }
     }
     
@@ -384,6 +439,7 @@ struct BedTimeDial: View {
 // ---------------------------------------------------
 
 struct BedTimeView: View {
+    @Environment(\.colorScheme) var colorScheme
     
     @ObservedObject var data: BedTimeData
     
@@ -407,29 +463,29 @@ struct BedTimeView: View {
             HStack {
                 DatePicker("Bed time", selection: $data.startTime, displayedComponents: [.hourAndMinute])
                     .labelsHidden()
-                    .background(BedTimeColorPalette.bgColor2)
+                    .background(ColorPalette[colorScheme].background2)
                     .mask(Capsule())
                 
                 Line()
                     .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                    .foregroundColor(BedTimeColorPalette.bgColor2)
+                    .foregroundColor(ColorPalette[colorScheme].background2)
                     .frame(height: 2)
                 
                 makeDurationText()
                 
                 Line()
                     .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                    .foregroundColor(BedTimeColorPalette.bgColor2)
+                    .foregroundColor(ColorPalette[colorScheme].background2)
                     .frame(height: 2)
                 
                 DatePicker("Wake up time", selection: $data.endTime, displayedComponents: [.hourAndMinute])
                     .labelsHidden()
-                    .background(BedTimeColorPalette.bgColor2)
+                    .background(ColorPalette[colorScheme].background2)
                     .mask(Capsule())
             }
         }
         .font(.system(size: 12, weight: .bold, design: .rounded))
-        .foregroundColor(BedTimeColorPalette.fgColor)
+        .foregroundColor(ColorPalette[colorScheme].foreground)
         .padding(.horizontal)
         .padding(.top)
     }
@@ -470,7 +526,7 @@ struct BedTimeView: View {
                     BedTimeDial(data: data)
                 }
                 .padding()
-                .background(BedTimeColorPalette.bgColor)
+                .background(ColorPalette[colorScheme].background)
                 .cornerRadius(20)
                 .padding()
                 
@@ -478,13 +534,14 @@ struct BedTimeView: View {
             }
             
         }
-        .background(BedTimeColorPalette.bgColor2.ignoresSafeArea())
+        .background(Color(.secondarySystemBackground).ignoresSafeArea())
     }
 }
 
 struct BedTimeView_Previews: PreviewProvider {
     static var previews: some View {
-        BedTimeView()
+        BedTimeView().colorScheme(.dark)
+        BedTimeView().colorScheme(.light)
     }
 }
 
