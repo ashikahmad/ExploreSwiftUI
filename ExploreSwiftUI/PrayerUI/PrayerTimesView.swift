@@ -9,13 +9,11 @@ import SwiftUI
 
 struct PrayerTimesView: View {
     var body: some View {
-        ZStack {
+        List {
             let times = PrayerService.timesToday()
                 .map { ($0.key, $0.value) }
                 .sorted { $0.0 < $1.0 }
             
-            Color.blue
-                .ignoresSafeArea()
             VStack(spacing: 2) {
                 ForEach(times, id: \.0.name) {
                     WaqtRow(waqt: $0.0, time: $0.1)
@@ -29,6 +27,7 @@ struct PrayerTimesView: View {
 
 struct PrayerTimesView_Previews: PreviewProvider {
     static var previews: some View {
-        PrayerTimesView()
+        PrayerTimesView().colorScheme(.light)
+        PrayerTimesView().colorScheme(.dark)
     }
 }

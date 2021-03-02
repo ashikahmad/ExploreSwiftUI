@@ -295,11 +295,11 @@ struct BedTimeDial: View {
                 .frame(width: sliderRingWidth - sliderInnerPadding*2)
                 .padding(sliderInnerPadding - 2)
                 .background(
-                    Circle()
-                        .foregroundColor(
-                            currentDrag == .none
-                                ? .clear
-                                : ColorPalette[colorScheme].background2))
+                    Circle().foregroundColor(
+                        currentDrag == .none
+                            ? .clear
+                            : ColorPalette[colorScheme].background2)
+                )
                 .aspectRatio(1, contentMode: .fit)
                 .foregroundColor(ColorPalette[colorScheme].foreground2)
                 .rotationEffect(.degrees(-angle - startDegree + 90))
@@ -328,7 +328,8 @@ struct BedTimeDial: View {
                 .foregroundColor(
                     currentDrag == .none
                         ? ColorPalette[colorScheme].background3
-                        : .accentColor)
+                        : ColorPalette[colorScheme].foreground2
+                )
                 .rotationEffect(.degrees(startDegree-90))
             
             // Slider Dashes

@@ -24,9 +24,9 @@ struct WaqtRow: View {
         }
         .padding(.horizontal, 8)
         .frame(height: 40)
-        .background(Color(white: 0, opacity: 0.5))
+        .background(Color(.secondarySystemBackground))
         .cornerRadius(5.0)
-        .foregroundColor(.white)
+//        .foregroundColor(.white)
     }
 }
 
@@ -37,8 +37,8 @@ struct WaqtRow_Previews: PreviewProvider {
             .sorted { $0.0 < $1.0 }
         
         ZStack {
-            Color.blue
-                .ignoresSafeArea()
+//            Color.blue
+//                .ignoresSafeArea()
             VStack(spacing: 2) {
                 ForEach(times, id: \.0.name) {
                     WaqtRow(waqt: $0.0, time: $0.1)

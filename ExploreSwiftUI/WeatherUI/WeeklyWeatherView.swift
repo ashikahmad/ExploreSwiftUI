@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct WeeklyWeatherView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         let days = [
             ("SAT", "cloud.sun.fill", 24),
@@ -17,7 +19,7 @@ struct WeeklyWeatherView: View {
             ("WED", "moon.stars.fill", 27)
         ]
         
-        VStack {
+        ScrollView {
             HStack {
                 ForEach(days, id: \.0) { day, icon, temp in
                     DayWeatherCell(
@@ -30,19 +32,26 @@ struct WeeklyWeatherView: View {
                     }
                 }
             }
-            .foregroundColor(.white)
             .padding()
+            .background(colorScheme == .light
+                            ? Color.blue
+                            : Color(.secondarySystemBackground))
+            .cornerRadius(10)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .foregroundColor(.white)
             
             Spacer()
         }
-        .background(Color.blue
-                        .ignoresSafeArea())
+        .background(Color.systemBackground.ignoresSafeArea())
+        
         .navigationTitle("Weather")
     }
 }
 
 struct WeeklyWeatherView_Previews: PreviewProvider {
     static var previews: some View {
-        WeeklyWeatherView()
+        WeeklyWeatherView().colorScheme(.light)
+        WeeklyWeatherView().colorScheme(.dark)
     }
 }

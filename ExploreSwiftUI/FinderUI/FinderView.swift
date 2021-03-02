@@ -26,7 +26,7 @@ struct FinderView: View {
                     VStack {
                         Folder(icon: icon, color: color)
                         Text(title)
-                            .foregroundColor(.white)
+//                            .foregroundColor(.white)
                     }
                 }
             }.padding(.bottom, 8)
@@ -36,21 +36,25 @@ struct FinderView: View {
                     VStack {
                         Folder(icon: icon, color: color)
                         Text(title)
-                            .foregroundColor(.white)
+//                            .foregroundColor(.white)
                     }
                 }
             }.padding(.bottom, 8)
             
             Spacer()
         }
+        .font(.subheadline)
         .padding()
-        .background(Color.blue.ignoresSafeArea())
+        .background(Color.systemBackground.ignoresSafeArea())
         .navigationTitle("My Files")
     }
 }
 
 struct FinderView_Previews: PreviewProvider {
     static var previews: some View {
-        FinderView()
+        Group {
+            FinderView().colorScheme(.light)
+            FinderView().colorScheme(.dark)
+        }
     }
 }
