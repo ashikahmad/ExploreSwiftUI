@@ -23,25 +23,49 @@ struct BedTimeColorPalette {
 // ---------------------------------------------------
 
 class BedTimeData: ObservableObject {
-    @Published var startTime: Date
-    @Published var endTime: Date
+    @Published var startTime: Date {
+        didSet { adjustDurationIfNeeded(anchoringStartTime: true) }
+    }
+    @Published var endTime: Date {
+        didSet { adjustDurationIfNeeded(anchoringStartTime: false) }
+    }
+    
+    var minDuration: Double = 1
+    var maxDuration: Double = 20
     
     var duration: Double {
-        var d = endHour - startHour
-        if d < 0 { d += 24 }
-        return d
+        return (endHour - startHour).fixHour()
     }
     
-    var startHour: Double {
-        startTime.timeIntervalSince(Date.today)/3600
-    }
-    var endHour: Double {
-        endTime.timeIntervalSince(Date.today)/3600
-    }
+    var startHour: Double { startTime.hours }
+    var endHour: Double { endTime.hours }
     
     init(startTime: Date, endTime: Date) {
         self.startTime = startTime
         self.endTime = endTime
+    }
+    
+    private var isAdjusting = false
+    
+    private func adjustDurationIfNeeded(anchoringStartTime: Bool) {
+        guard !isAdjusting else { return }
+        isAdjusting = true
+        
+        if duration < minDuration {
+            if anchoringStartTime {
+                endTime = Date(hours: (startTime.hours + minDuration).fixHour())
+            } else {
+                startTime = Date(hours: (endTime.hours - minDuration).fixHour())
+            }
+        } else if duration > maxDuration {
+            if anchoringStartTime {
+                endTime = Date(hours: (startTime.hours + maxDuration).fixHour())
+            } else {
+                startTime = Date(hours: (endTime.hours - maxDuration).fixHour())
+            }
+        }
+        
+        isAdjusting = false
     }
 }
 
@@ -199,7 +223,7 @@ struct BedTimeDial: View {
             makeSecondaryLabels()
             makePrimaryLabels()
         }
-        .padding(20)
+        .padding(8)
         .aspectRatio(1, contentMode: .fit)
     }
     
@@ -407,6 +431,7 @@ struct BedTimeView: View {
         .font(.system(size: 12, weight: .bold, design: .rounded))
         .foregroundColor(BedTimeColorPalette.fgColor)
         .padding(.horizontal)
+        .padding(.top)
     }
     
     fileprivate func makeDurationText() -> some View {
@@ -436,15 +461,24 @@ struct BedTimeView: View {
     
     var body: some View {
         
-        VStack {
-            Spacer()
+        ScrollView {
+            VStack {
+    //            Spacer()
+                
+                VStack {
+                    makeInputSection()
+                    BedTimeDial(data: data)
+                }
+                .padding()
+                .background(BedTimeColorPalette.bgColor)
+                .cornerRadius(20)
+                .padding()
+                
+//                Spacer()
+            }
             
-            makeInputSection()
-            BedTimeDial(data: data)
-            
-            Spacer()
         }
-        .background(BedTimeColorPalette.bgColor.ignoresSafeArea())
+        .background(BedTimeColorPalette.bgColor2.ignoresSafeArea())
     }
 }
 
