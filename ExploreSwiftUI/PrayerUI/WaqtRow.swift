@@ -13,20 +13,26 @@ struct WaqtRow: View {
     
     var body: some View {
         HStack {
-            Image(systemName: waqt.icon)
-            Text(waqt.name.capitalized)
-                .font(.headline)
-                .fontWeight(.light)
+            VStack(alignment: .leading) {
+                Text(waqt.name.capitalized)
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .fontWeight(.bold)
+                
+                Text(time)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+            }
+            
             Spacer()
-            Text(time)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+            
+            Image(systemName: waqt.icon)
+                .font(.largeTitle)
+                .foregroundColor(.secondary)
         }
-        .padding(.horizontal, 8)
-        .frame(height: 40)
+        .padding(12)
         .background(Color(.secondarySystemBackground))
         .cornerRadius(5.0)
-//        .foregroundColor(.white)
     }
 }
 

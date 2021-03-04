@@ -14,12 +14,14 @@ struct PrayerTimesView: View {
                 .map { ($0.key, $0.value) }
                 .sorted { $0.0 < $1.0 }
             
-            VStack(spacing: 2) {
+            VStack(spacing: 8) {
                 ForEach(times, id: \.0.name) {
                     WaqtRow(waqt: $0.0, time: $0.1)
                 }
             }
             .padding()
+            .listRowInsets(.zero)
+            .background(Color.systemBackground)
         }
         .navigationTitle("Prayer Time")
     }
@@ -31,3 +33,20 @@ struct PrayerTimesView_Previews: PreviewProvider {
         PrayerTimesView().colorScheme(.dark)
     }
 }
+
+extension EdgeInsets {
+    
+    static var zero: Self { return EdgeInsets(all: 0) }
+    
+    init(all: CGFloat) {
+        self.init(horizontal: 0, vertical: 0)
+    }
+    
+    init(horizontal: CGFloat, vertical: CGFloat) {
+        self.init(top: vertical, leading: horizontal, bottom: vertical, trailing: horizontal)
+    }
+}
+
+/*
+ * 
+ */

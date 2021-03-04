@@ -8,16 +8,31 @@
 import SwiftUI
 
 struct ExperimentListView: View {
+    @EnvironmentObject var appState: AppState
+    
     var body: some View {
         List {
-            Text("Prayer Times")
+            HStack {
+                Text("ColorScheme")
+                Spacer(minLength: 20)
+                Picker(selection: $appState.themeChoice, label: Text("ColorScheme")) {
+                    Text("System").tag(ThemeChoice.system)
+                    Text("Light").tag(ThemeChoice.light)
+                    Text("Dark").tag(ThemeChoice.dark)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+            }
+            
+            Label("Prayer Times", systemImage: "sunrise")
                 .navLink(PrayerTimesView())
-            Text("Finder")
+            Label("Finder", systemImage: "folder")
                 .navLink(FinderView())
-            Text("BedTime Reminder")
+            Label("BedTime Reminder", systemImage: "bed.double")
                 .navLink(BedTimeView())
-            Text("Weather")
+            Label("Weather", systemImage: "cloud.sun")
                 .navLink(WeeklyWeatherView())
+            Label("Random UI", systemImage: "scribble.variable")
+                .navLink(RandomUI())
         }
     }
 }
@@ -28,6 +43,7 @@ struct ExperimentListView_Previews: PreviewProvider {
             ExperimentListView()
                 .navigationTitle("Experiments")
         }
+        .environmentObject(AppState())
     }
 }
 

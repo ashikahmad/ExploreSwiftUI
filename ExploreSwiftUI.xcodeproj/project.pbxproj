@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B6A323025F1795700B6FAAC /* RandomUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6A322F25F1795700B6FAAC /* RandomUI.swift */; };
 		3B6ACC1E25EB7D9A000A99CB /* ExperimentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */; };
 		3B6ACC2325EB7F68000A99CB /* PrayerTimesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC2225EB7F68000A99CB /* PrayerTimesView.swift */; };
 		3B6ACC2825EB8000000A99CB /* FinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6ACC2725EB8000000A99CB /* FinderView.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B6A322F25F1795700B6FAAC /* RandomUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomUI.swift; sourceTree = "<group>"; };
 		3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentListView.swift; sourceTree = "<group>"; };
 		3B6ACC2225EB7F68000A99CB /* PrayerTimesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesView.swift; sourceTree = "<group>"; };
 		3B6ACC2725EB8000000A99CB /* FinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderView.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				3BF7110325AF2AA100131030 /* ContentView.swift */,
 				3B6ACC1D25EB7D9A000A99CB /* ExperimentListView.swift */,
 				3B6F11AB25E91D16000B9EFA /* BedTimeView.swift */,
+				3B6A322F25F1795700B6FAAC /* RandomUI.swift */,
 				3BF7110525AF2AA700131030 /* Assets.xcassets */,
 				3BF7110A25AF2AA700131030 /* Info.plist */,
 				3BF7110725AF2AA700131030 /* Preview Content */,
@@ -354,6 +357,7 @@
 				3B6ACC2825EB8000000A99CB /* FinderView.swift in Sources */,
 				3B6ACC2D25EB80CA000A99CB /* WeeklyWeatherView.swift in Sources */,
 				3BB6B70325BF2A9F00FE9AFC /* PrayerService.swift in Sources */,
+				3B6A323025F1795700B6FAAC /* RandomUI.swift in Sources */,
 				3B745A8C25B4A86E00A43100 /* SingleAxisGeometryReader.swift in Sources */,
 				3B6ACC3225EBCF8D000A99CB /* SwiftUI+Extra.swift in Sources */,
 				3B745A7A25B4776700A43100 /* DayWeatherCell.swift in Sources */,

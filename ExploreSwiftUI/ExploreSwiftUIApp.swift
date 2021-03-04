@@ -7,15 +7,40 @@
 
 import SwiftUI
 
+enum ThemeChoice {
+    case system, light, dark
+}
+
+class AppState: ObservableObject {
+    @Published var themeChoice: ThemeChoice = .system
+}
+
 @main
 struct ExploreSwiftUIApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                ExperimentListView()
-                    .navigationTitle("Experiments")
-            }
-//            .accentColor(Color(#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)))
+            AppContent()
         }
+    }
+}
+
+struct AppContent: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @ObservedObject var appState = AppState()
+    
+    var body: some View {
+        NavigationView {
+            ExperimentListView()
+                .navigationTitle("Experiments")
+        }
+        .environment(\.colorScheme, {
+            switch appState.themeChoice {
+            case .system: return colorScheme
+            case .light: return .light
+            case .dark: return .dark
+            }
+        }())
+        .environmentObject(appState)
     }
 }
