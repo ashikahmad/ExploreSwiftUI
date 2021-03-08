@@ -13,35 +13,44 @@ struct RandomUI: View {
     @State private var corner: CGFloat = 8
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Shape")
-                Spacer(minLength: 20)
-                Picker(selection: $buttonShape, label: Text("ColorScheme")) {
-                    Text("Circle").tag(ButtonShape.circle)
-                    Text("Capsule").tag(ButtonShape.capsule)
-                    Text("Rect").tag(ButtonShape.roundedRect(0))
+        VStack(spacing: 0) {
+            VStack(spacing: 16) {
+                VCell(title: "Shape") {
+                    Picker(selection: $buttonShape, label: Text("Shape")) {
+                        Text("Circle").tag(ButtonShape.circle)
+                        Text("Capsule").tag(ButtonShape.capsule)
+                        Text("Rect").tag(ButtonShape.roundedRect(0))
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                 }
-                .pickerStyle(SegmentedPickerStyle())
-            }
-            
-            if buttonShape.isRoundedRect {
-                HStack {
-                    Text("Corner Radius")
-                    Spacer(minLength: 20)
-                    Slider(value: $corner, in: 0...30)
-                    Text("\(corner, specifier: "%.1f")")
+                
+                if buttonShape.isRoundedRect {
+                    VCell(title: "Corner Radius") {
+                        HStack {
+                            Slider(value: $corner, in: 0...30)
+                            Text("\(corner, specifier: "%.1f")")
+                        }
+                    }
                 }
+                
+                Spacer().frame(height: 25)
             }
-            
-            Divider()
+            .padding(.horizontal)
+            .background(
+                CurveSidedRect(curveHeight: 30)
+                    .padding(.horizontal, -5)
+                    .foregroundColor(Color(.tertiarySystemBackground))
+                    .ignoresSafeArea()
+                    .shadow(radius: 4, y: 6)
+            )
             
             makeRaisedButton()
-                .padding()
+                .padding(40)
             
             Spacer()
         }
-        .padding()
+        .background(Color(.secondarySystemBackground).ignoresSafeArea())
+        .navigationBarTitle("")
     }
     
     func makeRaisedButton() -> some View {
@@ -71,10 +80,15 @@ struct RandomUI: View {
 
 struct RandomUI_Previews: PreviewProvider {
     static var previews: some View {
-        RandomUI()
+        NavigationView {
+            RandomUI()
+        }
     }
 }
 
+// -----------------------------------------------------------
+// MARK: - Raised Button
+// -----------------------------------------------------------
 enum ButtonShape: Hashable {
     case circle
     case capsule
@@ -127,5 +141,86 @@ struct RaisedButtonStyle: ButtonStyle {
         var new = self
         new.shape = buttonShape
         return new
+    }
+}
+
+// -----------------------------------------------------------
+// MARK: - Custom Shape Experiment
+// -----------------------------------------------------------
+
+struct CurveSidedRect: Shape {
+    var curveHeight: CGFloat
+    
+    func path(in rect: CGRect) -> Path {
+        Path { p in
+            let cH = min(curveHeight, rect.height)
+            let curveRect = CGRect(
+                origin: rect.bottomLeft.offset(y: -cH),
+                size: CGSize(width: rect.width, height: cH))
+            
+            p.move(to: rect.topLeft)
+            p.addLine(to: rect.topRight)
+            p.addLine(to: curveRect.topRight)
+            p.addQuadCurve(to: curveRect.topLeft,
+                           control: controlPoint(for: curveRect))
+            p.closeSubpath()
+        }
+    }
+    
+    func controlPoint(for rect: CGRect) -> CGPoint {
+        let x = rect.width/2
+        let h = rect.height
+        let r = (x*x + h*h) / 2*h
+        let oc = r*r / (r - h)
+        
+        return CGPoint(x: rect.midX, y: rect.maxY + oc - r)
+    }
+}
+
+// -----------------------------------------------------------
+// MARK: - Convenience - Views
+// -----------------------------------------------------------
+
+struct VCell<ValueView: View>: View {
+    let title: String
+    let valueBuilder: ()->ValueView
+    
+    init(title: String, @ViewBuilder value: @escaping ()->ValueView ) {
+        self.title = title
+        self.valueBuilder = value
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .padding(.leading, 4)
+            
+            valueBuilder()
+        }
+    }
+}
+
+// -----------------------------------------------------------
+// MARK: - Convenience - Extensions
+// -----------------------------------------------------------
+
+extension CGRect {
+    var topLeft: CGPoint { CGPoint(x: minX, y: minY) }
+    var topRight: CGPoint { CGPoint(x: maxX, y: minY) }
+    var top: CGPoint { CGPoint(x: midX, y: minY) }
+    
+    var bottomLeft: CGPoint { CGPoint(x: minX, y: maxY) }
+    var bottomRight: CGPoint { CGPoint(x: maxX, y: maxY) }
+    var bottom: CGPoint { CGPoint(x: midX, y: maxY) }
+    
+    var left: CGPoint { CGPoint(x: minX, y: midY) }
+    var right: CGPoint { CGPoint(x: maxX, y: midY) }
+}
+
+extension CGPoint {
+    func offset(x: CGFloat = 0, y: CGFloat = 0) -> CGPoint {
+        return CGPoint(x: self.x + x, y: self.y + y)
     }
 }
